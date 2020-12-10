@@ -1,0 +1,32 @@
+prototype(Netlogix.EsiRendering:RenderAsEsi) {
+    @class = 'Netlogix\\EsiRendering\\FusionObjects\\RenderAsEsiImplementation'
+
+    # Context node used to render the given content as ESI
+    node = ${node}
+    content = ''
+}
+
+esiRendering = Neos.Fusion:Tag {
+    tagName = 'esi:include'
+
+    attributes.src = Neos.Fusion:UriBuilder {
+        package = 'Netlogix.EsiRendering'
+        controller = 'EsiRendering'
+        action = 'index'
+        arguments = ${arguments}
+        absolute = false
+    }
+
+    selfClosingTag = true
+
+    @cache {
+        mode = 'cached'
+        entryIdentifier {
+            esiIdentifier = ${esiIdentifier}
+            contextNode = ${contextNode}
+        }
+        entryTags {
+            0 = 'Netlogix_EsiRendering'
+        }
+    }
+}

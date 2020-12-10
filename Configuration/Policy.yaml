@@ -1,0 +1,11 @@
+privilegeTargets:
+  'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
+    'Netlogix.EsiRendering:EsiRendering':
+      matcher: 'within(Netlogix\EsiRendering\Controller\EsiRenderingController) && method(public .*->(?!initialize)indexAction())'
+
+roles:
+  # TODO: Generate access token when rendering ESI tag and validate
+  'Neos.Flow:Everybody':
+    privileges:
+      - privilegeTarget: 'Netlogix.EsiRendering:EsiRendering'
+        permission: GRANT

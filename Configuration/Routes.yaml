@@ -1,0 +1,8 @@
+- name: 'ESI Rendering'
+  uriPattern: 'esirendering'
+  defaults:
+    '@package': 'Netlogix.EsiRendering'
+    '@controller': 'EsiRendering'
+    '@action': 'index'
+    '@format': 'html'
+  appendExceedingArguments: true
