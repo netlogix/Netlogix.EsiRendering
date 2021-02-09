@@ -1,7 +1,14 @@
 {
-    "name": "netlogix/esirendering",
+    "name": "netlogix/esi-rendering",
     "description": "Render content in fusion as esi:include",
+    "license": "MIT",
     "type": "neos-package",
+    "keywords": [
+        "neos",
+        "esi",
+        "varnish",
+        "nginx"
+    ],
     "require": {
         "neos/neos": "^5.3"
     },
@@ -9,6 +16,9 @@
         "psr-4": {
             "Netlogix\\EsiRendering\\": "Classes/"
         }
+    },
+    "suggest": {
+        "flowpack/varnish": "For Varnish support including caching ESIs individually with their own lifetime"
     },
     "extra": {
         "neos": {
