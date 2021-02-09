@@ -1,0 +1,5 @@
+Netlogix:
+  EsiRendering:
+    # Add a <link rel="esi:include" href=""> element before each esi for debugging
+    # This setting is enabled for Development by default
+    debug: false
