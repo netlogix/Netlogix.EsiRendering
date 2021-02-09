@@ -6,10 +6,8 @@ prototype(Netlogix.EsiRendering:RenderAsEsi) {
     content = ''
 }
 
-esiRendering = Neos.Fusion:Tag {
-    tagName = 'esi:include'
-
-    attributes.src = Neos.Fusion:UriBuilder {
+esiRendering = Neos.Fusion:Component {
+    src = Neos.Fusion:UriBuilder {
         package = 'Netlogix.EsiRendering'
         controller = 'EsiRendering'
         action = 'index'
@@ -17,7 +15,28 @@ esiRendering = Neos.Fusion:Tag {
         absolute = false
     }
 
-    selfClosingTag = true
+    renderer = Neos.Fusion:Join {
+        esiUri = Neos.Fusion:Tag {
+            tagName = 'link'
+
+            attributes {
+                rel = 'esi:include'
+                'esi-identifier' = ${esiIdentifier}
+                'context-node' = ${contextNode.contextPath}
+                href = ${props.src}
+            }
+
+            @if.debug = ${Configuration.setting('Netlogix.EsiRendering.debug') == true}
+        }
+
+        esi = Neos.Fusion:Tag {
+            tagName = 'esi:include'
+
+            attributes.src = ${props.src}
+
+            selfClosingTag = true
+        }
+    }
 
     @cache {
         mode = 'cached'
