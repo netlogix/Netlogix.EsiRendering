@@ -4,6 +4,7 @@ namespace Netlogix\EsiRendering\FusionObjects;
 
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Flow\Mvc\ActionRequest;
+use Neos\Flow\Security\Context;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 use Neos\Flow\Annotations as Flow;
 use Netlogix\EsiRendering\Service\HmacService;
@@ -21,6 +22,12 @@ class RenderAsEsiImplementation extends AbstractFusionObject
     protected $hmacService;
 
     /**
+     * @var Context
+     * @Flow\Inject
+     */
+    protected $securityContext;
+
+    /**
      * @return mixed
      */
     public function evaluate()
@@ -34,12 +41,13 @@ class RenderAsEsiImplementation extends AbstractFusionObject
         /** @var NodeInterface $contextNode */
         $contextNode = $this->fusionValue('node');
 
-        if (!$contextNode->getContext()->getWorkspace()->isPublicWorkspace()) {
+        if (!$this->shouldRenderAsEsi()) {
             $this->runtime->pushContextArray(array_merge($this->runtime->getCurrentContext(), [
                 'node' => $contextNode
             ]));
             $result = $this->fusionValue($contentPath);
             $this->runtime->popContext();
+
             return $result;
         }
 
@@ -59,6 +67,24 @@ class RenderAsEsiImplementation extends AbstractFusionObject
         $this->runtime->popContext();
 
         return $result;
+    }
+
+    private function shouldRenderAsEsi(): bool
+    {
+        /** @var NodeInterface $contextNode */
+        $contextNode = $this->fusionValue('node');
+
+        if ($contextNode instanceof NodeInterface && !$contextNode->getContext()->getWorkspace()->isPublicWorkspace()) {
+            // $contextNode is in a personal or internal Workspace, don't render as ESI
+            return false;
+        }
+
+        if ($this->securityContext->canBeInitialized() && $this->securityContext->getAccount() !== null) {
+            // Account found in context and might be viewing data protected by policy, don't render as ESI
+            return false;
+        }
+
+        return true;
     }
 
 }
