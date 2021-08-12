@@ -57,6 +57,7 @@ class RenderAsEsiImplementation extends AbstractFusionObject
             'esiIdentifier' => $this->fusionValue('cacheIdentifier'),
             'contextNode' => $contextNode,
             'arguments' => [
+                'esiIdentifier' => $this->fusionValue('cacheIdentifier'),
                 'fusionPath' => $fusionPath,
                 'node' => $contextNode,
                 'hmac' => $this->hmacService->generateHmac($fusionPath, $contextNode),
